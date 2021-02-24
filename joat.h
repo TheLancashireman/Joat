@@ -29,8 +29,8 @@
 #define m_hvp		5
 #define m_max		5
 
-#define lcd_rs		6
-#define lcd_e		7
+#define lcd_rs		7
+#define lcd_e		6
 #define lcd_d4		5
 #define lcd_d5		4
 #define lcd_d6		3
