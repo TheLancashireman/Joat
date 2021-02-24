@@ -28,19 +28,19 @@
 LiquidCrystal *lcd;
 uint8_t mode;
 
-static void setup(void);
+static void joat_setup(void);
 
 int main(void)
 {
 	init();
-	setup();
+	joat_setup();
 
 	for (;;)
 	{
 	}
 }
 
-static void setup(void)
+static void joat_setup(void)
 {
 	// Initialise the timing system (timer1)
 	init_timing();
