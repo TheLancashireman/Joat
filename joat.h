@@ -21,14 +21,15 @@
 #define JOAT_H	1
 
 // Operating modes
-#define m_start		0
-#define m_freq		1
-#define m_cap		2
-#define m_ind		3
-#define m_prog		4
-#define m_hvp		5
-#define m_max		5
+#define m_freq		0
+#define m_cap		1
+#define m_ind		2
+#define m_prog		3
+#define m_hvp		4
+#define m_max		4
+#define m_start		5	// Deliberately out of range
 
+// LCD/VFD pins (4-bit mode)
 #define lcd_rs		7
 #define lcd_e		6
 #define lcd_d4		5
@@ -36,6 +37,18 @@
 #define lcd_d6		3
 #define lcd_d7		2
 
+// Buttons
+#define btn_pin		A6	// Buttons use a resistor network and an analogue pin.
+#define btn_none	0
+#define btn_ok		1
+#define btn_change	2
+
 extern void init(void);
+extern uint8_t button(void);
+extern void frequency_meter(void);
+extern void capacitance_meter(void);
+extern void inductance_meter(void);
+extern void avr_programmer(void);
+extern void avr_hvp(void);
 
 #endif

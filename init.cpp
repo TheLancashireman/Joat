@@ -18,7 +18,12 @@
  *	along with Joat.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <Arduino.h>
+#include <wiring_private.h>
 
 void init(void)
 {
+	sbi(ADCSRA, ADPS2);		// Prescaler for 16 MHz
+	sbi(ADCSRA, ADPS1);
+	sbi(ADCSRA, ADPS0);
+	sbi(ADCSRA, ADEN);		// Enable a/d converter
 }

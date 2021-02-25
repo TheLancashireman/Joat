@@ -27,8 +27,14 @@
 */
 LiquidCrystal *lcd;
 uint8_t mode;
+uint32_t btn_timer;
+uint32_t btn_lasttime;
+uint8_t btn_last;
 
 static void joat_setup(void);
+static void change_mode(void);
+static void wipe_row(uint8_t row);
+static void display_mode(uint8_t row, uint8_t m);
 
 int main(void)
 {
@@ -37,6 +43,41 @@ int main(void)
 
 	for (;;)
 	{
+		uint8_t b = button();
+
+		if ( b == btn_change )
+			change_mode();
+		else if ( b == btn_ok && mode <= m_max)
+		{
+			display_mode(0, mode);
+			
+			switch ( mode )
+			{
+			case m_freq:
+				frequency_meter();
+				break;
+
+			case m_cap:
+				capacitance_meter();
+				break;
+
+			case m_ind:
+				inductance_meter();
+				break;
+
+			case m_prog:
+				avr_programmer();
+				break;
+
+			case m_hvp:
+				avr_hvp();
+				break;
+
+			default:
+				/* Not reached */
+				break;
+			}
+		}
 	}
 }
 
@@ -54,4 +95,125 @@ static void joat_setup(void)
 	lcd->print(F("Joat"));
 	lcd->setCursor(0,1);
 	lcd->print(F("(c) dh   GPLv3"));
+
+	// Initialise the a/d converter
+	analogReference(DEFAULT);
+
+	// Initial mode
+	mode = m_start;
+}
+
+static void change_mode(void)
+{
+	mode++;
+	if ( mode > m_max )
+		mode = 0;
+	display_mode(1, mode);
+}
+
+static void wipe_row(uint8_t row)
+{
+	lcd->setCursor(0, row);
+	lcd->print(F("                "));
+	lcd->setCursor(0, row);
+}
+
+static void display_mode(uint8_t row, uint8_t m)
+{
+	wipe_row(row);
+	switch (m)
+	{
+	case m_freq:
+		lcd->print(F("Frequency"));
+		break;
+
+	case m_cap:
+		lcd->print(F("Capacitance"));
+		break;
+
+	case m_ind:
+		lcd->print(F("Inductance"));
+		break;
+
+	case m_prog:
+		lcd->print(F("AVR programmer"));
+		break;
+
+	case m_hvp:
+		lcd->print(F("AVR HVP"));
+		break;
+
+	default:
+		/* Not reached */
+		lcd->print(F("Help!"));
+		break;
+	}
+}
+
+uint8_t button(void)
+{
+	if ( btn_timer != 0 )
+	{
+		// Hold off sampling for a while after a button change
+		uint32_t now = (uint32_t)read_ticks();
+		uint32_t el = now - btn_lasttime;
+		if ( btn_timer < el )
+			btn_timer = 0;
+		else
+			btn_timer -= el;
+		btn_lasttime = now;
+	}
+	else
+	{
+		uint8_t new_btn;
+		uint16_t aval = analogRead(btn_pin);
+		if ( aval < 256 )
+			new_btn = btn_ok;
+		else if ( aval < 768 )
+			new_btn = btn_change;
+		else
+			new_btn = btn_none;
+
+		if ( new_btn != btn_last )
+		{
+			btn_last = new_btn;
+			btn_timer = (uint32_t)MILLIS_TO_TICKS(20);
+			btn_lasttime = (uint32_t)read_ticks();
+			return new_btn;
+		}
+	}
+	return btn_none;
+}
+
+// TEMPORARY: dummy functions for initial testing
+static void not_implemented(void)
+{
+	wipe_row(1);
+	lcd->print(F("Not implemented"));
+	for (;;) {}
+}
+
+void frequency_meter(void)
+{
+	not_implemented();
+}
+
+void capacitance_meter(void)
+{
+	not_implemented();
+}
+
+void inductance_meter(void)
+{
+	not_implemented();
+}
+
+void avr_programmer(void)
+{
+	not_implemented();
+}
+
+void avr_hvp(void)
+{
+	not_implemented();
 }
