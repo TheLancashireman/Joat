@@ -166,10 +166,15 @@ uint8_t button(void)
 	else
 	{
 		uint8_t new_btn;
-		uint16_t aval = analogRead(btn_pin);
-		if ( aval < 256 )
+		int16_t av1;
+		int16_t av2 = (int16_t)analogRead(btn_pin);
+		do {
+			av1 = av2;
+			av2 = (int16_t)analogRead(btn_pin);
+		} while ( abs(av2-av1) > 16);
+		if ( av1 < 256 )
 			new_btn = btn_ok;
-		else if ( aval < 768 )
+		else if ( av1 < 768 )
 			new_btn = btn_change;
 		else
 			new_btn = btn_none;
