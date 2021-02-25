@@ -1,4 +1,4 @@
-/* init.cpp - my own init() function. Blocks accidental use of millis(), micros() etc.
+/* init.cpp - My Very Own init() Function(tm).
  *
  * (c) David Haworth
  *
@@ -19,6 +19,15 @@
 */
 #include <Arduino.h>
 #include <wiring_private.h>
+
+/* init() - a minimal version of the init() function in wiring.c
+ *
+ * Using this init function prevents the accidental inclusion of the Arduino version in wiring.c.
+ * It avoids attaching the default arduino interrupts and means that accidental use of
+ * millis(), micros() and related functions gets detected.
+ *
+ * Timer initialisation is done in timing.c
+*/
 
 void init(void)
 {
