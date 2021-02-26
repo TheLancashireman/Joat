@@ -53,7 +53,7 @@ void capacitance_meter(void)
 		int val = analogRead(cap_in);
 		digitalWrite(cap_out, LOW);
 
-		if (val < 1000)
+		if (val < 750)
 		{
 			pinMode(cap_in, OUTPUT);
 
@@ -64,7 +64,7 @@ void capacitance_meter(void)
 		else
 		{
 			pinMode(cap_in, OUTPUT);
-			delay(1);
+			tick_delay(MICROS_TO_TICKS(1000));
 			pinMode(cap_out, INPUT_PULLUP);
 			uint32_t u1 = (uint32_t)read_ticks();
 			uint32_t t;
@@ -79,17 +79,21 @@ void capacitance_meter(void)
 			val = analogRead(cap_out);
 			digitalWrite(cap_in, HIGH);
 
-			uint32_t u = ticks_to_micros(t);
-			uint32_t dischargeTime = (u / 1000) * 5;
-			delay(dischargeTime);
+			uint32_t dischargeTime = (t / 1000) * 5;
+			tick_delay(dischargeTime);
 			pinMode(cap_out, OUTPUT);
 			digitalWrite(cap_out, LOW);
 			digitalWrite(cap_in, LOW);
 
 			cdata.ms = val;
-			cdata.capacitance = -(double)u / cap_R_pullup / log(1.0 - (double)val / (double)cap_max_adc);
+			cdata.capacitance = -(double)(ticks_to_micros(t))/cap_R_pullup/log(1.0 - (double)val/(double)cap_max_adc);
 
-			if ( cdata.capacitance > 1000.0)
+			if ( cdata.capacitance < 1.0 )
+			{
+				cdata.capacitance = cdata.capacitance * 1000.0;
+				cdata.unit = cap_pF;
+			}
+			else if ( cdata.capacitance > 1000.0 )
 			{
 				cdata.capacitance = cdata.capacitance / 1000.0;
 				cdata.unit = cap_uF;
