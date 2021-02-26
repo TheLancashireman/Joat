@@ -63,27 +63,56 @@ extended by increasing the wait time.
 
 ### Capacitance meter
 
-The code was stolen from https://www.circuitbasics.com/how-to-make-an-arduino-capacitance-meter/
+The capacitance measurement functionality is based on code that was orignally found at
+https://www.circuitbasics.com/how-to-make-an-arduino-capacitance-meter/
 
 After more research the original was found at
 https://wordpress.codewrite.co.uk/pic/2014/01/25/capacitance-meter-mk-ii/index.html
 
 The calculation was eventually published under GPLv3 at https://github.com/codewrite/arduino-capacitor
+This version gave unstable results on my hardware.
+
+The feature in Joat is derived from the original code from www.circuitbasics.com.
 
 ### Inductance meter
 
 Inspired by https://www.edabbles.com/2020/06/16/measuring-inductance-with-arduino-nano/
 
+Not implemented yet.
 
 ### AVR programmer
 
 Based on the ArduinoISP sketch that is part of the arduino 1.8.13 release. BSD license -
 see the source file and http://www.opensource.org/licenses/bsd-license.php for details.
 
-### AVT HVP
+Not implemented yet.
+
+### AVR HVP
 
 Inspired by ... (tbd)
 
+Not implemented yet.
+
 ## License
+
+Copyright David Haworth and others.
+
+ToDo: BSD license for the AVR programmer.
+
+This file is part of Joat.
+
+Joat is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Joat is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Joat.  If not, see <http://www.gnu.org/licenses/>.
+
 
 GPLv3 to be inserted here. The AVR programmer functionality is BSD.
