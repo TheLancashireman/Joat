@@ -2,24 +2,31 @@
 
 # UNDER CONSTRUCTION
 
-Jack-of-all-trades is a little development tool with several features. It is based on an
+Jack-of-all-trades is a little development tool with several useful features. It is based on an
 arduino nano and uses a 2x16 character display.
 
 ## Features
 
 * frequency meter
+* capacitance meter
 
 Planned:
 * programming AVR microcontrollers using the serial/SPI technique.
 * resetting the fuses and erasing AVR microcontrollers using the HVP technique.
-* a capacitance meter
-* an inductance meter
+* inductance meter
 * anything else I can think of that will fit in the flash
 
 ## How it works
 
 A standard 2x16 LCD of VFD display provides visual output. The LiquidCrystal class is
-used in 4-bit mode with no read pin, this requiring 6 pins D2..D7
+used in 4-bit mode with no read pin, thus requiring 6 pins (D2..D7).
+
+Timer1 runs at the full CPU frequency of 16 MHz. This timer provides all the timing for
+the application. The standard timing functions from wiring.c are not used. The file timing.cpp
+provides a compatibility layer, but for accuracy it is better to use the raw ticks. Time measurement
+is passive (no interrupts), which means you have to read the time every 4 ms or less. That is
+not usually a problem. Time is monotonically increasing using a 64-bit variable, which is good for the
+naxt 36000 years :-) But of course you can truncate the value to 32 bits or even less if you want.
 
 Two buttons control the operation. The buttons are both connected to analogue pin 6 via resistors.
 With no buttons pressed, the intput voltage is about 5v. With button 1 pressed the level drops to about 2.5v.
@@ -32,16 +39,19 @@ The main program displays a friendy message, then waits for button input. One bu
 modes one at a time. The other button selects the displayed mode and switches to it.
 
 The only way to get back to the main program is to reset the arduino. This avoids having to
-disable all the hardware when swithing from one mode to another.
+disable all the hardware when switching from one mode to another. It also means that less stack is needed
+because the functions of the individual features are marked with the noreturn attribute.
+
+The global data for the individual features are gathered together in a union to save RAM space. All
+strings for the display are placed in the flash using F(), PSTR() etc.
 
 ### Frequency meter
 
 Originally developed by the author as part of the analogue-synth module in
 https://github.com/TheLancashireman/synthesiser.
 
-Timer1 runs at the full CPU clock frequency of 16 MHz. The signal to measure (assumed to be a
-pulse train or square wave with fairly sharp rise/fall times) is fed to the input capture pin
-of timer1 (pin 8 on the nano).
+The signal to measure (assumed to be a pulse train or square wave with fairly sharp rise/fall times)
+is fed to the input capture pin of timer1 (pin 8 on the nano).
 
 The input capture interrupt stores the captured timer value and increments a capture counter.
 The timer overflow interrupt increments a counter. At regular intervals, the capture value and
