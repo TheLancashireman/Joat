@@ -22,31 +22,47 @@
 #include <timing.h>
 #include <LiquidCrystal.h>
 
-/* We cannot use a static constructor because the LiquidCrystal library uses the Arduino delay functions
- * and the local replacement hasn't been initialised yet.
-*/
+// We cannot use a static constructor because the LiquidCrystal library uses the Arduino delay functions
+// and the local replacement hasn't been initialised yet.
 LiquidCrystal *lcd;
-uint8_t mode;
-uint32_t btn_timer;
-uint32_t btn_lasttime;
-uint8_t btn_last;
+
+// This is where the individual functions store global variables.
+joat_data_t joat_data;
+
+//
+static uint32_t btn_timer;
+static uint32_t btn_lasttime;
+static uint8_t btn_last;
 
 static void joat_setup(void);
-static void change_mode(void);
 static void wipe_row(uint8_t row);
 static void display_mode(uint8_t row, uint8_t m);
+
+// TEMPORARY: dummy functions for initial testing
+extern void capacitance_meter(void) __attribute__((noreturn));
+extern void inductance_meter(void) __attribute__((noreturn));
+extern void avr_programmer(void) __attribute__((noreturn));
+extern void avr_hvp(void) __attribute__((noreturn));
 
 int main(void)
 {
 	init();
 	joat_setup();
 
+	// Initial mode
+	uint8_t mode = m_start;
+
 	for (;;)
 	{
 		uint8_t b = button();
 
 		if ( b == btn_change )
-			change_mode();
+		{
+			mode++;
+			if ( mode > m_max )
+				mode = 0;
+			display_mode(1, mode);
+		}
 		else if ( b == btn_ok && mode <= m_max)
 		{
 			display_mode(0, mode);
@@ -98,23 +114,21 @@ static void joat_setup(void)
 
 	// Initialise the a/d converter
 	analogReference(DEFAULT);
-
-	// Initial mode
-	mode = m_start;
 }
 
-static void change_mode(void)
+void fill_spaces(uint8_t nsp)
 {
-	mode++;
-	if ( mode > m_max )
-		mode = 0;
-	display_mode(1, mode);
+	while ( nsp > 0 )
+	{
+		lcd->print(' ');
+		nsp--;
+	}
 }
 
 static void wipe_row(uint8_t row)
 {
 	lcd->setCursor(0, row);
-	lcd->print(F("                "));
+	fill_spaces(16);
 	lcd->setCursor(0, row);
 }
 
@@ -191,16 +205,12 @@ uint8_t button(void)
 }
 
 // TEMPORARY: dummy functions for initial testing
+static void not_implemented(void) __attribute__((noreturn));
 static void not_implemented(void)
 {
 	wipe_row(1);
 	lcd->print(F("Not implemented"));
 	for (;;) {}
-}
-
-void frequency_meter(void)
-{
-	not_implemented();
 }
 
 void capacitance_meter(void)

@@ -20,6 +20,9 @@
 #ifndef JOAT_H
 #define JOAT_H	1
 
+#include "frequency.h"
+#include <LiquidCrystal.h>
+
 // Operating modes
 #define m_freq		0
 #define m_cap		1
@@ -43,12 +46,17 @@
 #define btn_ok		1
 #define btn_change	2
 
+// Data for all modes, packed into a union to save RAM
+typedef union
+{
+	frequency_data_t freq_data;
+} joat_data_t;
+
+extern joat_data_t joat_data;
+extern LiquidCrystal *lcd;
+
 extern void init(void);
 extern uint8_t button(void);
-extern void frequency_meter(void);
-extern void capacitance_meter(void);
-extern void inductance_meter(void);
-extern void avr_programmer(void);
-extern void avr_hvp(void);
+extern void fill_spaces(uint8_t nsp);
 
 #endif
