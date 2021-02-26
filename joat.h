@@ -52,6 +52,7 @@
 typedef union
 {
 	frequency_data_t freq_data;
+	capacitance_data_t cap_data;
 } joat_data_t;
 
 extern joat_data_t joat_data;
