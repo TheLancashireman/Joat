@@ -93,3 +93,13 @@ uint64_t millis_to_ticks(uint32_t millis)
 {
 	return micros_to_ticks((uint64_t)millis * 1000);
 }
+
+uint32_t ticks_to_micros(uint32_t ticks)
+{
+	return (uint32_t)(((uint64_t)ticks * 1000000) / HZ);
+}
+
+uint32_t ticks_to_millis(uint32_t ticks)
+{
+	return ticks_to_micros(ticks)/1000;
+}

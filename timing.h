@@ -29,10 +29,11 @@ extern uint64_t timing_time;
 extern uint16_t timing_last_t1;
 
 extern uint64_t read_ticks(void);
-extern uint32_t read_ticks_32(void);
 extern void tick_delay(uint64_t dly);
 extern uint64_t micros_to_ticks(uint64_t micros);
 extern uint64_t millis_to_ticks(uint32_t millis);
+extern uint32_t ticks_to_micros(uint32_t ticks);
+extern uint32_t ticks_to_millis(uint32_t ticks);
 extern void init_timing(void);
 
 #endif
