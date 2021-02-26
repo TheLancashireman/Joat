@@ -18,7 +18,7 @@ Planned:
 
 ## How it works
 
-A standard 2x16 LCD of VFD display provides visual output. The LiquidCrystal class is
+A standard 2x16 LCD or VFD display provides visual output. The LiquidCrystal class is
 used in 4-bit mode with no read pin, thus requiring 6 pins (D2..D7).
 
 Timer1 runs at the full CPU frequency of 16 MHz. This timer provides all the timing for
@@ -26,7 +26,7 @@ the application. The standard timing functions from wiring.c are not used. The f
 provides a compatibility layer, but for accuracy it is better to use the raw ticks. Time measurement
 is passive (no interrupts), which means you have to read the time every 4 ms or less. That is
 not usually a problem. Time is monotonically increasing using a 64-bit variable, which is good for the
-naxt 36000 years :-) But of course you can truncate the value to 32 bits or even less if you want.
+next 36000 years :-) But of course you can truncate the value to 32 bits or even less if you want.
 
 Two buttons control the operation. The buttons are both connected to analogue pin 6 via resistors.
 With no buttons pressed, the intput voltage is about 5v. With button 1 pressed the level drops to about 2.5v.
