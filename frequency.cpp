@@ -18,9 +18,9 @@
  *	along with Joat  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <Arduino.h>
+#include "joat.h"
 #include "timing.h"
 #include "frequency.h"
-#include "joat.h"
 
 #define ICP1	8	// Input capture 1 is on pin 8/PB0
 

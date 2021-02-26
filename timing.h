@@ -22,16 +22,17 @@
 
 #define HZ	16000000
 
-#define MICROS_TO_TICKS(u)	((((unsigned long long)(u))*HZ)/1000000)
-#define MILLIS_TO_TICKS(m)	MICROS_TO_TICKS(((unsigned long long)(m))*1000)
+#define MICROS_TO_TICKS(u)	((((uint64_t)(u))*HZ)/1000000)
+#define MILLIS_TO_TICKS(m)	MICROS_TO_TICKS(((uint64_t)(m))*1000)
 
-extern unsigned long long timing_time;
-extern unsigned timing_last_t1;
+extern uint64_t timing_time;
+extern uint16_t timing_last_t1;
 
-extern unsigned long long read_ticks(void);
-extern void tick_delay(unsigned long long dly);
-extern unsigned long long micros_to_ticks(unsigned long long micros);
-extern unsigned long long millis_to_ticks(unsigned long millis);
+extern uint64_t read_ticks(void);
+extern uint32_t read_ticks_32(void);
+extern void tick_delay(uint64_t dly);
+extern uint64_t micros_to_ticks(uint64_t micros);
+extern uint64_t millis_to_ticks(uint32_t millis);
 extern void init_timing(void);
 
 #endif

@@ -18,9 +18,9 @@
  * Joat is written for an Arduino Nano
 */
 #include <Arduino.h>
-#include <joat.h>
-#include <timing.h>
 #include <LiquidCrystal.h>
+#include "joat.h"
+#include "timing.h"
 
 // We cannot use a static constructor because the LiquidCrystal library uses the Arduino delay functions
 // and the local replacement hasn't been initialised yet.
@@ -39,7 +39,6 @@ static void wipe_row(uint8_t row);
 static void display_mode(uint8_t row, uint8_t m);
 
 // TEMPORARY: dummy functions for initial testing
-extern void capacitance_meter(void) __attribute__((noreturn));
 extern void inductance_meter(void) __attribute__((noreturn));
 extern void avr_programmer(void) __attribute__((noreturn));
 extern void avr_hvp(void) __attribute__((noreturn));
@@ -211,11 +210,6 @@ static void not_implemented(void)
 	wipe_row(1);
 	lcd->print(F("Not implemented"));
 	for (;;) {}
-}
-
-void capacitance_meter(void)
-{
-	not_implemented();
 }
 
 void inductance_meter(void)

@@ -20,8 +20,10 @@
 #ifndef JOAT_H
 #define JOAT_H	1
 
-#include "frequency.h"
+#include <Arduino.h>
 #include <LiquidCrystal.h>
+#include "frequency.h"
+#include "capacitance.h"
 
 // Operating modes
 #define m_freq		0

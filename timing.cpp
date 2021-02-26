@@ -20,8 +20,8 @@
 #include <Arduino.h>
 #include "timing.h"
 
-unsigned long long timing_time;
-unsigned timing_last_t1;
+uint64_t timing_time;
+uint16_t timing_last_t1;
 
 /* read_ticks() returns an ever increasing time
  *
@@ -34,12 +34,12 @@ unsigned timing_last_t1;
  * Using raw ticks is a bit more efficient than using units like milliseconds and microseconds,
  * because usually you can persuade the compiler to do the computation for you.
 */
-unsigned long long read_ticks(void)
+uint64_t read_ticks(void)
 {
 	cli();
-	unsigned t1 = TCNT1;
-	unsigned diff = t1 - timing_last_t1;
-	unsigned long long retval = timing_time + diff;
+	uint16_t t1 = TCNT1;
+	uint16_t diff = t1 - timing_last_t1;
+	uint64_t retval = timing_time + diff;
 	timing_time = retval;
 	timing_last_t1 = t1;
 	sei();
@@ -48,9 +48,9 @@ unsigned long long read_ticks(void)
 
 /* tick_delay() does nothing for the specified number of ticks
 */
-void tick_delay(unsigned long long dly)
+void tick_delay(uint64_t dly)
 {
-	unsigned long long t0 = read_ticks();
+	uint64_t t0 = read_ticks();
 
 	while ( (read_ticks() - t0) < dly )
 	{
@@ -84,12 +84,12 @@ void delayMicroseconds(unsigned int us)
 
 /* Conversion functions - are these needed?
 */
-unsigned long long micros_to_ticks(unsigned long long micros)
+uint64_t micros_to_ticks(uint64_t micros)
 {
 	return (micros * HZ) / 1000000;
 }
 
-unsigned long long millis_to_ticks(unsigned long millis)
+uint64_t millis_to_ticks(uint32_t millis)
 {
-	return micros_to_ticks((unsigned long long)millis * 1000);
+	return micros_to_ticks((uint64_t)millis * 1000);
 }

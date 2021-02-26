@@ -13,3 +13,8 @@ ARDUINO_ETC_PATH       = $(ARDUINO_TOOLS_PATH)/avr/etc
 AVR_TOOLS_PATH         = $(ARDUINO_TOOLS_PATH)/avr/bin
 
 include $(ARDUINO_BASE)/Arduino.make
+
+.PHONY: clean-all
+
+clean-all:
+	-rm -rf build-cli joat-cache.lib joat.pro joat.sch-bak

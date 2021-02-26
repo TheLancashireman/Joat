@@ -2,6 +2,8 @@
  *
  * (c) David Haworth
  *
+ * This file is part of Joat
+ *
  * Joat is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -19,6 +21,9 @@
 */
 #ifndef FREQUENCY_H
 #define FREQUENCY_H	1
+
+#include <Arduino.h>
+#include "joat.h"
 
 typedef struct frequency_data_s
 {
