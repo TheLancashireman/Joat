@@ -12,7 +12,7 @@
 ,10,PD7,D7,PD7/AIN1,,Yellow activity LED,,,,,VFD E,D7,,
 ,11,PB0,D8,PB0/CLK0/ICP1,,Red error LED,Tiny pin 8 (VCC),,,In (pulse width),Frequency/Pulse width,D8,,
 ,12,PB1,D9,PB1/OC1A/PWM,,Green heartbeat LED (PWM),Tiny pin 5 (SDI),,,,Tiny pin 8 (VCC),D9,Via PNP transistor,
-,13,PB2,D10,PB2/OC1B/SS/PWM,,Tiny pin 1 (RESET),Tiny pin 6 (SII),,,,Tiny pin 2 (SCI),D10,,
+,13,PB2,D10,PB2/OC1B/SS/PWM,,Tiny pin 1 (RESET),Tiny pin 6 (SII),,,,Tiny pin 2 (SCI)/RESET,D10,,
 ,14,PB3,D11,PB3/OC2/MOSI/PWM,,Tiny pin 5 (MOSI),Tiny pin 7 (SDO),,,,Tiny pin 5 (MOSI/SDI),D11,Fixed, because programmer uses SPI
 ,15,PB4,D12,PB4/MISO,,Tiny pin 6 (MISO),Tiny pin 2 (SCI),,,Trigger (any pin),Tiny pin 6 (MISO/SII),D12,Fixed, because programmer uses SPI
 ,16,PB5,D13,PB5/SCK/LED,,Tiny pin 7 (SCK),Tiny pin 1 (RST) shorts 12v to gnd,,,,Tiny pin 7 (SCK/SDO),D13,Fixed, because programmer uses SPI

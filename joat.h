@@ -24,6 +24,7 @@
 #include <LiquidCrystal.h>
 #include "frequency.h"
 #include "capacitance.h"
+#include "avr-programmer.h"
 
 // Operating modes
 #define m_freq		0
@@ -53,6 +54,7 @@ typedef union
 {
 	frequency_data_t freq_data;
 	capacitance_data_t cap_data;
+	avrp_data_t avrp_data;
 } joat_data_t;
 
 extern joat_data_t joat_data;
@@ -61,5 +63,6 @@ extern LiquidCrystal *lcd;
 extern void init(void);
 extern uint8_t button(void);
 extern void fill_spaces(uint8_t nsp);
+extern void wipe_row(uint8_t row);
 
 #endif

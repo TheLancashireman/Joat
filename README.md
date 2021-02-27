@@ -1,17 +1,22 @@
 # Joat - Jack-of-all-trades
 
-# UNDER CONSTRUCTION
-
 Jack-of-all-trades is a little development tool with several useful features. It is based on an
 arduino nano and uses a 2x16 character display.
+
+# UNDER CONSTRUCTION
+
+Current status:
+* frequency meter: working
+* capacitance meter: working not accurate for values < 1nF
+* AVR programmer s/w might be working but Vcc supply to AVR is too low
 
 ## Features
 
 * frequency meter
 * capacitance meter
+* AVR programmer (SPI)
 
 Planned:
-* programming AVR microcontrollers using the serial/SPI technique.
 * resetting the fuses and erasing AVR microcontrollers using the HVP technique.
 * inductance meter
 * anything else I can think of that will fit in the flash
@@ -82,10 +87,10 @@ Not implemented yet.
 
 ### AVR programmer
 
-Based on the ArduinoISP sketch that is part of the arduino 1.8.13 release. BSD license -
-see the source file and http://www.opensource.org/licenses/bsd-license.php for details.
+A heavily modified version of the ArduinoISP sketch that is part of the arduino 1.8.13 release.
 
-Not implemented yet.
+The original has a BSD license - see the source file and http://www.opensource.org/licenses/bsd-license.php
+for details.
 
 ### AVR HVP
 

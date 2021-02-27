@@ -35,12 +35,10 @@ static uint32_t btn_lasttime;
 static uint8_t btn_last;
 
 static void joat_setup(void);
-static void wipe_row(uint8_t row);
 static void display_mode(uint8_t row, uint8_t m);
 
 // TEMPORARY: dummy functions for initial testing
 extern void inductance_meter(void) __attribute__((noreturn));
-extern void avr_programmer(void) __attribute__((noreturn));
 extern void avr_hvp(void) __attribute__((noreturn));
 
 int main(void)
@@ -124,7 +122,7 @@ void fill_spaces(uint8_t nsp)
 	}
 }
 
-static void wipe_row(uint8_t row)
+void wipe_row(uint8_t row)
 {
 	lcd->setCursor(0, row);
 	fill_spaces(16);
@@ -213,11 +211,6 @@ static void not_implemented(void)
 }
 
 void inductance_meter(void)
-{
-	not_implemented();
-}
-
-void avr_programmer(void)
 {
 	not_implemented();
 }
