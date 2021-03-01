@@ -66,6 +66,7 @@ static void read_page(void);
 static void read_signature(void);
 static void avrisp(void);
 static void vcc(uint8_t power);
+static char hexdigit(uint8_t h);
 
 static const char PROGMEM twiddle[4]	= { '-', 0x8c, '|', '/' };
 static const char PROGMEM beat[4]		= { '.', 'o', 'O', 'o' };
@@ -103,16 +104,13 @@ void avr_programmer(void)
 				lcd->print((char)pgm_read_byte(&beat[t]));
 			}
 
-			if ( avrpdata.error != err0 )
+			if ( avrpdata.errorcode != err0 )
 			{
-				if ( err0 == 0 )
-				{
-					lcd->setCursor(7, 1);
-					lcd->print(F("Error"));
-				}
-				lcd->setCursor(12, 1);
-				lcd->print((char)((avrpdata.error & 0x01) == 0 ? '!' : ' '));
-				err0 = avrpdata.error;
+				lcd->setCursor(7, 1);
+				lcd->print('E');
+				lcd->print(hexdigit((avrpdata.errorcode >> 4) & 0xf));
+				lcd->print(hexdigit((avrpdata.errorcode) & 0xf));
+				err0 = avrpdata.errorcode;
 			}
 			
 			if (Serial.available())
@@ -120,6 +118,9 @@ void avr_programmer(void)
 				avrisp();
 			}
 		}
+
+		if ( avrpdata.pmode == 1 )
+			end_pmode();
 
 		// Turn off power to Vcc
 		vcc(0);
@@ -188,14 +189,15 @@ static uint8_t spi_transaction(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
 
 static void empty_reply(void)
 {
-	if (CRC_EOP == getch())
+	if ( getch() == CRC_EOP )
 	{
 		Serial.print((char)STK_INSYNC);
 		Serial.print((char)STK_OK);
 	}
 	else
 	{
-		avrpdata.error++;
+		avrpdata.errorcount++;
+		avrpdata.errorcode = 0x01;
 		Serial.print((char)STK_NOSYNC);
 	}
 }
@@ -210,7 +212,8 @@ static void breply(uint8_t b)
 	}
 	else
 	{
-		avrpdata.error++;
+		avrpdata.errorcount++;
+		avrpdata.errorcode = 0x02;
 		Serial.print((char)STK_NOSYNC);
 	}
 }
@@ -350,7 +353,8 @@ static void write_flash(int length)
 	}
 	else
 	{
-		avrpdata.error++;
+		avrpdata.errorcount++;
+		avrpdata.errorcode = 0x03;
 		Serial.print((char) STK_NOSYNC);
 	}
 }
@@ -385,7 +389,8 @@ static uint8_t write_eeprom(unsigned int length)
 
 	if (length > avrpdata.param.eepromsize)
 	{
-		avrpdata.error++;
+		avrpdata.errorcount++;
+		avrpdata.errorcode = 0x04;
 		return STK_FAILED;
 	}
 
@@ -441,7 +446,8 @@ static void program_page(void)
 		}
 		else
 		{
-			avrpdata.error++;
+			avrpdata.errorcount++;
+			avrpdata.errorcode = 0x05;
 			Serial.print((char) STK_NOSYNC);
 		}
 	}
@@ -503,7 +509,8 @@ static void read_page(void)
 	}
 	else
 	{
-		avrpdata.error++;
+		avrpdata.errorcount++;
+		avrpdata.errorcode = 0x06;
 		Serial.print((char) STK_NOSYNC);
 		return;
 	}
@@ -528,7 +535,8 @@ static void read_signature(void)
 	}
 	else
 	{
-		avrpdata.error++;
+		avrpdata.errorcount++;
+		avrpdata.errorcode = 0x07;
 		Serial.print((char) STK_NOSYNC);
 	}
 }
@@ -540,7 +548,8 @@ static void avrisp(void)
 	switch (ch)
 	{
 	case '0':		// sign-on
-		avrpdata.error = 0;
+		avrpdata.errorcount = 0;
+		avrpdata.errorcode = 0x00;
 		empty_reply();
 		break;
 
@@ -553,7 +562,8 @@ static void avrisp(void)
 		}
 		else
 		{
-			avrpdata.error++;
+			avrpdata.errorcount++;
+			avrpdata.errorcode = 0x08;
 			Serial.print((char) STK_NOSYNC);
 		}
 		break;
@@ -574,7 +584,7 @@ static void avrisp(void)
 		break;
 
 	case 'P':
-		if (!avrpdata.pmode)
+		if ( avrpdata.pmode != 1 )
 			start_pmode();
 		empty_reply();
 		break;
@@ -609,7 +619,8 @@ static void avrisp(void)
 		break;
 
 	case 'Q': //0x51
-		avrpdata.error = 0;
+		avrpdata.errorcount = 0;
+		avrpdata.errorcode = 0x00;
 		end_pmode();
 		empty_reply();
 		break;
@@ -621,13 +632,15 @@ static void avrisp(void)
 	// expecting a command, not CRC_EOP
 	// this is how we can get back in sync
 	case CRC_EOP:
-		avrpdata.error++;
+		avrpdata.errorcount++;
+		avrpdata.errorcode = 0x09;
 		Serial.print((char)STK_NOSYNC);
 		break;
 
 	// anything else we will return STK_UNKNOWN
 	default:
-		avrpdata.error++;
+		avrpdata.errorcount++;
+		avrpdata.errorcode = 0x0a;
 		if ( getch() == CRC_EOP )
 			Serial.print((char)STK_UNKNOWN);
 		else
@@ -639,4 +652,11 @@ static void avrisp(void)
 static void avrp_init(void)
 {
 	Serial.begin(BAUDRATE);
+}
+
+static char hexdigit(uint8_t h)
+{
+	if ( h < 10 )	return (char)(h + 0x30);
+	if ( h < 16 )	return (char)(h - 0xa + 0x41);
+	return '?';
 }

@@ -87,7 +87,8 @@ typedef struct avrp_data_s
 	uint8_t buff[256];			// Data buffer
 	avrp_param_t param;			// Parameter block sent by PC
 	unsigned int here;			// Address for reading and writing, set by 'U' command
-	unsigned int error;			// Error counter
+	uint8_t errorcount;			// Error counter
+	uint8_t errorcode;			// Error code of last error
 	uint8_t pmode;				// 0 = waiting, 1 = programming, 2 = done
 	uint8_t rst_active_high;	// Depends on device
 	uint8_t prog_lamp_count;	// Counter for programming activity
