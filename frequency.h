@@ -37,5 +37,6 @@ typedef struct frequency_data_s
 } frequency_data_t;
 
 extern void frequency_meter(void) __attribute__((noreturn));
+extern void freq_init(void);
 
 #endif

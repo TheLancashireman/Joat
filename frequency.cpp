@@ -26,7 +26,6 @@
 
 #define fdata	joat_data.freq_data
 
-static void freq_init(void);
 static void display_freq(double f);
 
 /* ISR(TIMER1_OVF_vect) - interrupt handler for the timer overflow
@@ -121,7 +120,7 @@ static void display_freq(double f)
 	fill_spaces(16 - np);
 }
 
-static void freq_init(void)
+void freq_init(void)
 {
 	pinMode(ICP1, INPUT);		// Set up the T1 input capture pin for frequency measurement
 	TCCR1B |= 0x40;				// Input capture on leading edge
