@@ -24,6 +24,7 @@
 #include <LiquidCrystal.h>
 #include "frequency.h"
 #include "capacitance.h"
+#include "inductance.h"
 #include "avr-programmer.h"
 
 // Operating modes
@@ -50,6 +51,7 @@
 #define btn_change	2
 
 // Data for all modes, packed into a union to save RAM
+// Note: no data for inductance meter; see inductance.h for reason
 typedef union
 {
 	frequency_data_t freq_data;

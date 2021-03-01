@@ -38,7 +38,6 @@ static void joat_setup(void);
 static void display_mode(uint8_t row, uint8_t m);
 
 // TEMPORARY: dummy functions for initial testing
-extern void inductance_meter(void) __attribute__((noreturn));
 extern void avr_hvp(void) __attribute__((noreturn));
 
 int main(void)
@@ -63,6 +62,7 @@ int main(void)
 		else if ( b == btn_ok && mode <= m_max)
 		{
 			display_mode(0, mode);
+			wipe_row(1);
 			
 			switch ( mode )
 			{
@@ -208,11 +208,6 @@ static void not_implemented(void)
 	wipe_row(1);
 	lcd->print(F("Not implemented"));
 	for (;;) {}
-}
-
-void inductance_meter(void)
-{
-	not_implemented();
 }
 
 void avr_hvp(void)
