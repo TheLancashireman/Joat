@@ -43,8 +43,9 @@ ISR(TIMER1_OVF_vect)
 */
 ISR(TIMER1_CAPT_vect)
 {
-	fdata.cap = ICR1;		// Read the time of the capture
-	fdata.n_cap++;
+	fdata.cap = ICR1;					// Read the time of the capture
+	fdata.n_oflo_cap = fdata.n_oflo;	// Upper part of the capture time
+	fdata.n_cap++;						// Count the captures
 }
 
 /* freq() - calculate the signal frequency

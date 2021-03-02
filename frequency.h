@@ -33,6 +33,7 @@ typedef struct frequency_data_s
 	uint16_t last_cap;
 	uint16_t cap;
 	uint8_t n_oflo;
+	uint8_t n_oflo_cap;
 	uint8_t n_cap;
 } frequency_data_t;
 
