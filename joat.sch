@@ -4,7 +4,7 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title ""
+Title "Joat - Jack of all trades meter/programmer"
 Date ""
 Rev ""
 Comp ""
@@ -617,17 +617,6 @@ Wire Wire Line
 	2700 2050 3300 2050
 Wire Wire Line
 	8800 3600 2500 3600
-$Comp
-L Device:C_Small C3
-U 1 1 605E8427
-P 9350 6000
-F 0 "C3" H 9442 6046 50  0000 L CNN
-F 1 "1u0" H 9442 5955 50  0000 L CNN
-F 2 "" H 9350 6000 50  0001 C CNN
-F 3 "~" H 9350 6000 50  0001 C CNN
-	1    9350 6000
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2200 5050 2200 5750
 $Comp
@@ -664,8 +653,6 @@ Wire Wire Line
 	10650 5750 10650 5850
 Wire Wire Line
 	10650 5850 10650 6150
-Wire Wire Line
-	9350 6150 10650 6150
 Connection ~ 10650 6150
 Wire Wire Line
 	10650 6150 10650 6250
@@ -778,18 +765,13 @@ Wire Wire Line
 Wire Wire Line
 	4150 4750 3600 4750
 Wire Wire Line
-	9350 6100 9350 6150
-Connection ~ 9350 6150
-Wire Wire Line
-	9350 6150 9000 6150
-Wire Wire Line
 	9000 6100 9000 6150
 $Comp
 L Device:C_Small C2
 U 1 1 605E9B3C
 P 9000 6000
 F 0 "C2" H 9092 6046 50  0000 L CNN
-F 1 "1u0" H 9092 5955 50  0000 L CNN
+F 1 "See text" H 9092 5955 50  0000 L CNN
 F 2 "" H 9000 6000 50  0001 C CNN
 F 3 "~" H 9000 6000 50  0001 C CNN
 	1    9000 6000
@@ -799,17 +781,10 @@ Connection ~ 10650 5850
 Wire Wire Line
 	7800 5450 9000 5450
 Wire Wire Line
-	10000 5850 9350 5850
-Wire Wire Line
 	9000 5450 9000 5850
 Connection ~ 9000 5850
 Wire Wire Line
 	9000 5850 9000 5900
-Wire Wire Line
-	9350 5900 9350 5850
-Connection ~ 9350 5850
-Wire Wire Line
-	9350 5850 9000 5850
 Wire Wire Line
 	9350 5350 9350 5550
 Wire Wire Line
@@ -850,4 +825,8 @@ Wire Wire Line
 	10600 3600 10500 3600
 Wire Wire Line
 	10650 3500 10500 3500
+Wire Wire Line
+	9000 5850 10000 5850
+Wire Wire Line
+	9000 6150 10650 6150
 $EndSCHEMATC
