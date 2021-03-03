@@ -35,6 +35,7 @@ typedef struct frequency_data_s
 	uint8_t n_oflo;
 	uint8_t n_oflo_cap;
 	uint8_t n_cap;
+	uint8_t n_discard;
 } frequency_data_t;
 
 extern void frequency_meter(void) __attribute__((noreturn));
