@@ -46,12 +46,17 @@
 
 #define idata	joat_data.freq_data
 
-#define CAPACITANCE		2.0e-6					// I measured my capacitors using Joat's capacitannce meter
+#define CAPACITANCE		1.0e-6					// ToDo measure capacitors using Joat's capacitance meter
 #define Pi				3.14159265
-#define N_SAMPLES		10						// Number of oscillation cycles at which to stop measurement
+#define CALC_CONSTANT	( 1.0 / (4.0 * Pi * Pi * CAPACITANCE) )
+//#define CALC_CONSTANT	12665.281929175			// ( 1.0 / (4.0 * Pi * Pi * CAPACITANCE) )
+
+#define MIN_DISCARD		1						// Minimum number of oscillation cycles to ignore
+#define MAX_DISCARD		3						// Maximum number of oscillation cycles to ignore
+#define MIN_SAMPLES		2						// Need at least this many cycles
+#define MAX_SAMPLES		3						// Number of oscillation cycles at which to stop measurement
 #define MAX_TICKS		MILLIS_TO_TICKS(500) 	// Maximum measurement time
 
-#define CALC_CONSTANT	12665.281929175			// ( 1.0 / (4.0 * Pi * Pi * CAPACITANCE) )
 
 static void ind_init(void);
 static void trigger_LC(void);
@@ -69,9 +74,6 @@ void inductance_meter(void)
 
 	for (;;)
 	{
-		// The oscillation should have stopped by now, so clear the capture counter
-		idata.n_cap = 0;
-
 		// Trigger the LC circuit
 		trigger_LC();
 
@@ -109,8 +111,11 @@ static uint8_t measure_oscillation(void)
 	uint64_t t0;
 	uint32_t elapsed;
 	uint16_t first_cap;
+	uint8_t first_ncap;
+	uint8_t first_oflo;
 	uint16_t last_cap;
-	uint8_t n_oflo;
+	uint8_t last_ncap;
+	uint8_t last_oflo;
 	uint8_t nc, no;
 	uint16_t v;
 
@@ -121,44 +126,51 @@ static uint8_t measure_oscillation(void)
 	// Wait for no longer than 1 second
 	do {
 		cli();
-		nc = idata.n_cap;
-		if ( nc > 0 )		// If there's been at least one capture, reset the interrupt handlers' data
-		{
-			first_cap = idata.cap;	// Starting point of the measurement
-			idata.n_cap = 0;
-			idata.n_oflo = 0;
-		}
+		first_ncap = idata.n_cap;
+		first_cap = idata.cap;			// Starting point of the measurement
+		first_oflo = idata.n_oflo_cap;
 		sei();
 
 		elapsed = read_ticks() - t0;
-	} while ( nc == 0  && elapsed < MAX_TICKS );
+	} while ( first_ncap < idata.n_discard  && elapsed < MAX_TICKS );
 
 	// No captures seen ==> no ocscillation.
-	if ( nc == 0 )
+	if ( first_ncap < idata.n_discard )
+	{
+		if ( idata.n_discard > MIN_DISCARD )
+			idata.n_discard--;
 		return 1;
+	}
 
 	t0 = read_ticks();
 
 	do {
 		cli();
-		nc = idata.n_cap;
-		if ( nc >= N_SAMPLES )	// If there's been at least the minimum number of captures, make the measurement
-		{
-			last_cap = idata.cap;	// End point of the measurement
-			n_oflo = idata.n_oflo;
-		}
+		last_ncap = idata.n_cap;
+		last_cap = idata.cap;
+		last_oflo = idata.n_oflo_cap;
 		sei();
+		nc = last_ncap - first_ncap;
 
 		elapsed = read_ticks() - t0;
-	} while ( nc < N_SAMPLES  && elapsed < MAX_TICKS );
+	} while ( nc < MAX_SAMPLES  && elapsed < MAX_TICKS );
 
 	if ( nc > 0 )		// If there's been at least one capture we can perform a calculation
 	{
-		idata.total_time = (uint32_t)last_cap  - (uint32_t)first_cap + (uint32_t)n_oflo * 65536ul;
+		no = (last_oflo - first_oflo);
+		idata.total_time = (uint32_t)last_cap  - (uint32_t)first_cap + (uint32_t)no * 65536ul;
 		idata.total_cap = nc;
+
+		if ( nc > MIN_SAMPLES )
+		{
+			if ( idata.n_discard < MAX_DISCARD )
+				idata.n_discard++;
+		}
 	}
 	else
 	{
+		if ( idata.n_discard > MIN_DISCARD )
+			idata.n_discard--;
 		return 2;		// There was one oscillation cycle but no more ==> error
 	}
 
@@ -179,7 +191,9 @@ static void calculate_inductance(void)
 	lcd->setCursor(0, 0);
 	np = lcd->print(F("f="));
 	np += lcd->print(f, 1);
-	fill_spaces(16-np);
+	fill_spaces(13-np);
+	lcd->print(F("d="));
+	lcd->print(idata.n_discard);
 	
 	lcd->setCursor(0, 1);
 	if ( L >= 1.0 )
@@ -202,10 +216,12 @@ static void calculate_inductance(void)
 		np = lcd->print(L*1.0e9, 3);
 		np += lcd->print(F("nH"));
 	}
-	fill_spaces(12 - np);
-	np = lcd->print(F("n="));
-	np += lcd->print(idata.total_cap);
-	fill_spaces(4 - np);
+	fill_spaces(13 - np);
+	lcd->print(F("n="));
+	if ( idata.total_cap < 10 )
+		lcd->print(idata.total_cap);
+	else
+		lcd->print('#');
 }
 
 /* display_error() - display the error code
@@ -226,7 +242,8 @@ static void trigger_LC(void)
 {
 	pinMode(ind_out, OUTPUT);
 	digitalWrite(ind_out, HIGH);
-	tick_delay(MILLIS_TO_TICKS(50));
+	tick_delay(MILLIS_TO_TICKS(5));
+	idata.n_cap = 0;
 	pinMode(ind_out, INPUT);
 }
 
@@ -250,4 +267,5 @@ static void discharge_LC(void)
 static void ind_init(void)
 {
 	freq_init();
+	idata.n_discard = MIN_DISCARD;
 }
