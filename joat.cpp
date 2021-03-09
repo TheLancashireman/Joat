@@ -105,7 +105,7 @@ static void joat_setup(void)
 
 	// Display a friendly greeting
 	lcd->setCursor(0,0);
-	lcd->print(F("Joat"));
+	lcd->print(F("The Joat"));
 	lcd->setCursor(0,1);
 	lcd->print(F("(c) dh   GPLv3"));
 

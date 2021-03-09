@@ -83,7 +83,7 @@ The feature in Joat is derived from the original code from www.circuitbasics.com
 
 Inspired by https://www.edabbles.com/2020/06/16/measuring-inductance-with-arduino-nano/
 
-Not implemented yet.
+Still under development.
 
 ### AVR programmer
 
