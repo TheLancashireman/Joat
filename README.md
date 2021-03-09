@@ -1,25 +1,30 @@
-# Joat - Jack-of-all-trades
+# The Joat - Jack-of-all-trades
 
-Jack-of-all-trades is a little development tool with several useful features. It is based on an
+The Jack-of-all-trades is a little development tool with several useful features. It is based on an
 arduino nano and uses a 2x16 character display.
+
+Please read the user's guide for instructions on how to use the Joat after you hav built it.
 
 # UNDER CONSTRUCTION
 
-Current status:
-* frequency meter: working
-* capacitance meter: working not accurate for values < 1nF
-* AVR programmer s/w might be working but Vcc supply to AVR is too low
-
 ## Features
 
-* frequency meter
-* capacitance meter
+* Frequency meter
+* Capacitance meter
+* Inductance meter
+* Quad voltmeter
 * AVR programmer (SPI)
+* AVR programmer and fuse reset
+* Anything else I can think of that will fit in the flash
 
-Planned:
-* resetting the fuses and erasing AVR microcontrollers using the HVP technique.
-* inductance meter
-* anything else I can think of that will fit in the flash
+## Current status
+
+* frequency meter: working
+* capacitance meter: working but not accurate for values < 1nF
+* inductance meter working but still under development.
+* AVR programmer s/w working
+* AVR HVP to be implemented
+* Quad DVM mode to be implemented
 
 ## How it works
 
@@ -40,10 +45,10 @@ is stable, then decides which button. If it is different from the last time, the
 Otherwise "none". Note: the "new" value could also be "none". When a change of state is detected, a hold-off
 time is started to avoid double-clicks caused by switch bounce.
 
-The main program displays a friendy message, then waits for button input. One button steps through the
+The main program displays a friendly message, then waits for button input. One button steps through the
 modes one at a time. The other button selects the displayed mode and switches to it.
 
-The only way to get back to the main program is to reset the arduino. This avoids having to
+The only way to get back to the main menu is to reset the arduino. This avoids having to
 disable all the hardware when switching from one mode to another. It also means that less stack is needed
 because the functions of the individual features are marked with the noreturn attribute.
 
@@ -63,7 +68,7 @@ The timer overflow interrupt increments a counter. At regular intervals, the cap
 counters are sampled. The total time since the last sample is calculated from the differences
 between the capture values and overflow counts. The frequency is the number of captures
 divided by the time in which they occurred. If no captures occur within two seconds, the
-frequency is displayed as 0 Hz, this giving a minimum frequency range of 0.5 Hz. The range could be
+frequency is displayed as 0 Hz, thus giving a minimum frequency range of 0.5 Hz. The range could be
 extended by increasing the wait time.
 
 ### Capacitance meter
@@ -84,6 +89,10 @@ The feature in Joat is derived from the original code from www.circuitbasics.com
 Inspired by https://www.edabbles.com/2020/06/16/measuring-inductance-with-arduino-nano/
 
 Still under development.
+
+### Quad DVM
+
+Not implemented yet.
 
 ### AVR programmer
 
