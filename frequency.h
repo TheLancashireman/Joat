@@ -25,6 +25,9 @@
 #include <Arduino.h>
 #include "joat.h"
 
+/* The frequency data block is used by the inductance meter as well
+*/
+
 typedef struct frequency_data_s
 {
 	uint32_t update_interval;
@@ -36,6 +39,7 @@ typedef struct frequency_data_s
 	uint8_t n_oflo_cap;
 	uint8_t n_cap;
 	uint8_t n_discard;
+	uint8_t capacitor_no;
 } frequency_data_t;
 
 extern void frequency_meter(void) __attribute__((noreturn));

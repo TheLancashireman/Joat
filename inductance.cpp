@@ -46,10 +46,12 @@
 
 #define idata	joat_data.freq_data
 
-#define CAPACITANCE		1.0e-6					// ToDo measure capacitors using Joat's capacitance meter
-#define Pi				3.14159265
-#define CALC_CONSTANT	( 1.0 / (4.0 * Pi * Pi * CAPACITANCE) )
-//#define CALC_CONSTANT	12665.281929175			// ( 1.0 / (4.0 * Pi * Pi * CAPACITANCE) )
+#define C1					2.2e-6					// ToDo measure capacitors using Joat's capacitance meter
+#define C2					1.0e-6
+#define C3					0.47e-6
+#define C4					0.22e-6
+#define C5					0.15e-6
+#define Pi					3.14159265
 
 #define MIN_DISCARD		1						// Minimum number of oscillation cycles to ignore
 #define MAX_DISCARD		3						// Maximum number of oscillation cycles to ignore
@@ -62,15 +64,19 @@ static void ind_init(void);
 static void trigger_LC(void);
 static void discharge_LC(void);
 static uint8_t measure_oscillation(void);
+static double select_capacitor(void);
 
-static void calculate_inductance(void);
+static void calculate_inductance(double cc);
 static void display_error(uint8_t err);
 
 void inductance_meter(void)
 {
 	uint8_t err;
+	double calc_constant;	// Constant for calculation that depends on chosen capacitor
 
 	ind_init();
+
+	calc_constant = select_capacitor();
 
 	for (;;)
 	{
@@ -86,7 +92,7 @@ void inductance_meter(void)
 		if ( err == 0 )
 		{
 			// Enough oscillations captured; calculate and display the inductance
-			calculate_inductance();
+			calculate_inductance(calc_constant);
 		}
 		else
 		{
@@ -94,8 +100,56 @@ void inductance_meter(void)
 			display_error(err);
 		}
 
-		tick_delay(MILLIS_TO_TICKS(500));
+		for ( int i = 0; i < 100; i++ )
+		{
+			if ( button() == btn_change )
+			{
+				calc_constant = select_capacitor();
+				break;
+			}
+
+			tick_delay(MILLIS_TO_TICKS(10));
+		}
 	}
+}
+
+/* select_capacitor() - select the capacitor and return the calculation constant
+*/
+double select_capacitor(void)
+{
+	double c;
+	uint8_t update = 1;
+	uint8_t b;
+
+	lcd->setCursor(0, 1);
+	fill_spaces(16 - lcd->print(F("Capacitor:")));
+	
+	do
+	{
+		if ( update )
+		{
+			lcd->setCursor(11, 1);
+			switch (idata.capacitor_no)
+			{
+			case 2:		c = C2;		lcd->print(F("1.0 "));	break;
+			case 3:		c = C3;		lcd->print(F("0.47"));	break;
+			case 4:		c = C4;		lcd->print(F("0.22"));	break;
+			case 5:		c = C5;		lcd->print(F("0.15"));	break;
+			default:	c = C1;		lcd->print(F("2.2 "));	idata.capacitor_no = 1;	break;
+			}
+			update = 0;
+		}
+
+		b = button();
+
+		if ( b == btn_change )
+		{
+			idata.capacitor_no++;
+			update = 1;
+		}
+	} while ( b != btn_ok );
+
+	return 1.0 / (4.0 * Pi * Pi * c);
 }
 
 /* measure_oscillation() - measure the oscillation frequency
@@ -182,10 +236,10 @@ static uint8_t measure_oscillation(void)
  * f = cycles / time_in_secs  = cycles / (time_in_ticks/ticks_per_sec) = (cycles * ticks_per_sec) / time_in_ticks
  * L = K / (f*f)
 */
-static void calculate_inductance(void)
+static void calculate_inductance(double cc)
 {
 	double f = ((double)idata.total_cap * 16.0e6) / (double)idata.total_time;
-	double L = CALC_CONSTANT / f / f;
+	double L = cc / f / f;
 	int np;
 
 	lcd->setCursor(0, 0);
@@ -268,4 +322,5 @@ static void ind_init(void)
 {
 	freq_init();
 	idata.n_discard = MIN_DISCARD;
+	idata.capacitor_no = 1;
 }
