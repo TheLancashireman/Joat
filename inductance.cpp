@@ -35,7 +35,7 @@
  *
  * Therefore:	L = 1 / (4 * pi**2 * f**2 * C)
  *
- * Using a calculation constant K = 1 / (4 * p**2 * C)
+ * Using a calculation constant K = 1 / (4 * pi**2 * C)
  * the final calculation is L = K / (f * f)
 */
 #include <Arduino.h>
@@ -46,11 +46,11 @@
 
 #define idata	joat_data.freq_data
 
-#define C1					2.2e-6					// ToDo measure capacitors using Joat's capacitance meter
-#define C2					1.0e-6
-#define C3					0.47e-6
-#define C4					0.22e-6
-#define C5					0.15e-6
+#define C1					2.22e-6				// Measured capacitors using Joat's capacitance meter
+#define C2					1.14e-6
+#define C3					0.50e-6
+#define C4					0.235e-6
+#define C5					0.165e-6
 #define Pi					3.14159265
 
 #define MIN_DISCARD		1						// Minimum number of oscillation cycles to ignore
