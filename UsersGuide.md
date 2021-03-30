@@ -17,7 +17,7 @@ from the ZIF socket before pressing reset.
 * J1.1 - 12v supply controlled by Arduino (HVP mode)
 * J1.2 - Input to Schmitt trigger/comparator
 * J1.3 - Output of Schmitt trigger/comparator
-* J1.4 - No connection (to be defined)
+* J1.4 - A1 - DVM top right
 * J1.5 - D10 - RESET control in serial programming mode
 
 * J1.6 - 5v supply controller by Arduino (Serial/HVP mode)
@@ -26,17 +26,28 @@ from the ZIF socket before pressing reset.
 * J1.9 - D12/MISO - data signal in serial programming mode
 * J1.10 - D11/MOSI - data signal in serial programming mode
 
-* J2.1 - A0 - Negative connection for capacitance meter
-* J2.2 - A2 - Positive connection for capacitance meter
+* J2.1 - A0 - Negative connection for capacitance meter - DVM top left
+* J2.2 - A2 - Positive connection for capacitance meter - DVM top right
 * J2.3 - D8/ICP1 - input for frequency and inductance modes (TTL level)
 * J2.4 - Inductance meter comparator output
-* J2.5 - Inductance meter coil
+* J2.5 - A3 - DVM bottom right
 
-* J2.6 - Gnd
-* J2.7 - Gnd
-* J2.8 - Gnd
-* J2.9 - Gnd
-* J2.10 - Gnd
+* J2.6 - C5 = 0.15 uF
+* J2.7 - C4 = 0.22 uF
+* J2.8 - C3 = 0.47 uF
+* J2.9 - C2 = 1.0 uF
+* J2.10 - C1 = 2.2 uF
+
+* J3.1 - Analogue ground
+* J3.2 - Analogue ground
+* J3.3 - LC trigger
+* J3.4 - LC trigger
+
+* J4.1 - Gnd
+* J4.2 - Gnd
+* J4.3 - Gnd
+* J4.4 - Gnd
+* J4.5 - Gnd
 
 ## Capacitance meter
 
@@ -82,7 +93,7 @@ For an ATTiny device (8-pin), connect according to the following list:
 * J1.8 to ATTiny pin 7
 * J1.9 to ATTiny pin 6
 * J1.10 to ATTiny pin 5
-* J2.10 (Gnd) to ATTiny pin 4
+* J4.x (Gnd) to ATTiny pin 4
 
 For other AVR devices, connect as described in the data sheet.
 
