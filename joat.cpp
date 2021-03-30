@@ -78,6 +78,10 @@ int main(void)
 				inductance_meter();
 				break;
 
+			case m_dvm:
+				dvm();
+				break;
+
 			case m_prog:
 				avr_programmer();
 				break;
@@ -144,6 +148,10 @@ static void display_mode(uint8_t row, uint8_t m)
 
 	case m_ind:
 		lcd->print(F("Inductance"));
+		break;
+
+	case m_dvm:
+		lcd->print(F("DVM"));
 		break;
 
 	case m_prog:

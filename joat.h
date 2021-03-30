@@ -25,16 +25,18 @@
 #include "frequency.h"
 #include "capacitance.h"
 #include "inductance.h"
+#include "dvm.h"
 #include "avr-programmer.h"
 
 // Operating modes
 #define m_freq		0
 #define m_cap		1
 #define m_ind		2
-#define m_prog		3
-#define m_hvp		4
-#define m_max		4
-#define m_start		5	// Deliberately out of range
+#define m_dvm		3
+#define m_prog		4
+#define m_hvp		5
+#define m_max		5
+#define m_start		(m_max+1)	// Deliberately out of range
 
 // LCD/VFD pins (4-bit mode)
 #define lcd_rs		7
