@@ -3,9 +3,7 @@
 The Jack-of-all-trades is a little development tool with several useful features. It is based on an
 arduino nano and uses a 2x16 character display.
 
-Please read the user's guide for instructions on how to use the Joat after you hav built it.
-
-# UNDER CONSTRUCTION
+Please read the user's guide for instructions on how to use the Joat after you have built it.
 
 ## Features
 
@@ -24,7 +22,7 @@ Please read the user's guide for instructions on how to use the Joat after you h
 * inductance meter working but still under development.
 * AVR programmer s/w working
 * AVR HVP to be implemented
-* Quad DVM mode to be implemented
+* Quad DVM working
 
 ## How it works
 
@@ -92,7 +90,9 @@ Still under development.
 
 ### Quad DVM
 
-Not implemented yet.
+Uses four of the Nano's analogue inputs and displays the voltage of each on the display/
+
+Care must be take not to exceed the input voltage of the Nano.
 
 ### AVR programmer
 
@@ -106,6 +106,10 @@ for details.
 Inspired by ... (tbd)
 
 Not implemented yet.
+
+## Construction
+
+Schematics etc. are available at https://thelancashireman.org/projects/TheJoat.html
 
 ## License
 
